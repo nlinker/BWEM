@@ -141,12 +141,12 @@ void Neutral::SetBlocking(const vector<WalkPosition> & blockedAreas)
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
-//                                  class Ressource
+//                                  class Resource
 //                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
-Ressource::Ressource(BWAPI::Unit u, Map * pMap)
+Resource::Resource(BWAPI::Unit u, Map * pMap)
 	: Neutral(u, pMap),
 	m_initialAmount(u->getInitialResources())
 {
@@ -163,7 +163,7 @@ Ressource::Ressource(BWAPI::Unit u, Map * pMap)
 
 
 Mineral::Mineral(BWAPI::Unit u, Map * pMap)
-	: Ressource(u, pMap)
+	: Resource(u, pMap)
 {
 	bwem_assert(Type().isMineralField());
 }
@@ -185,7 +185,7 @@ Mineral::~Mineral()
 
 
 Geyser::Geyser(BWAPI::Unit u, Map * pMap)
-	: Ressource(u, pMap)
+	: Resource(u, pMap)
 {
 	bwem_assert(Type() == Resource_Vespene_Geyser);
 }

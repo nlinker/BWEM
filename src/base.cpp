@@ -35,18 +35,18 @@ using namespace BWAPI_ext;
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
-Base::Base(Area * pArea, const TilePosition & location, const vector<Ressource *> & AssignedRessources, const vector<Mineral *> & BlockingMinerals)
-	: m_pArea(pArea),
-	m_pMap(pArea->GetMap()),
-	m_location(location),
-	m_center(Position(location) + Position(UnitType(Terran_Command_Center).tileSize()) / 2),
-	m_BlockingMinerals(BlockingMinerals)
+Base::Base(Area * pArea, const TilePosition & location, const vector<Resource *> & AssignedResources, const vector<Mineral *> & BlockingMinerals)
+  : m_pArea(pArea),
+  m_pMap(pArea->GetMap()),
+  m_location(location),
+  m_center(Position(location) + Position(UnitType(Terran_Command_Center).tileSize()) / 2),
+  m_BlockingMinerals(BlockingMinerals)
 {
-	bwem_assert(!AssignedRessources.empty());
+  bwem_assert(!AssignedRessources.empty());
 
-	for (Ressource * r : AssignedRessources)
-		if		(Mineral * m = r->IsMineral())	m_Minerals.push_back(m);
-		else if (Geyser * g = r->IsGeyser())		m_Geysers.push_back(g);
+  for (Resource * r : AssignedResources)
+    if (Mineral * m = r->IsMineral())	m_Minerals.push_back(m);
+    else if (Geyser * g = r->IsGeyser())		m_Geysers.push_back(g);
 }
 
 

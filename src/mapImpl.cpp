@@ -687,22 +687,18 @@ Geyser * MapImpl::GetGeyser(BWAPI::Unit u) const
 	return (iGeyser != m_Geysers.end()) ? iGeyser->get() : nullptr;
 }
 
+void MapImpl::OnDestroy(BWAPI::Unit u) {
+  if (u->getType().isMineralField()) {
+    auto iMineral = find_if(m_Minerals.begin(), m_Minerals.end(), [u](const unique_ptr<Mineral> & m) { return m->Unit() == u; });
+    bwem_assert(iMineral != m_Minerals.end());
+    fast_erase(m_Minerals, distance(m_Minerals.begin(), iMineral));
+  }
+  else if (u->getType().isSpecialBuilding()) {
+    auto iStaticBuilding = find_if(m_StaticBuildings.begin(), m_StaticBuildings.end(), [u](const unique_ptr<StaticBuilding> & g) { return g->Unit() == u; });
+    bwem_assert(iStaticBuilding != m_StaticBuildings.end());
 
-void MapImpl::OnMineralDestroyed(BWAPI::Unit u)
-{
-	auto iMineral = find_if(m_Minerals.begin(), m_Minerals.end(), [u](const unique_ptr<Mineral> & m){ return m->Unit() == u; });
-	bwem_assert(iMineral != m_Minerals.end());
-
-	fast_erase(m_Minerals, distance(m_Minerals.begin(), iMineral));
-}
-
-
-void MapImpl::OnStaticBuildingDestroyed(BWAPI::Unit u)
-{
-	auto iStaticBuilding = find_if(m_StaticBuildings.begin(), m_StaticBuildings.end(), [u](const unique_ptr<StaticBuilding> & g){ return g->Unit() == u; });
-	bwem_assert(iStaticBuilding != m_StaticBuildings.end());
-
-	fast_erase(m_StaticBuildings, distance(m_StaticBuildings.begin(), iStaticBuilding));
+    fast_erase(m_StaticBuildings, distance(m_StaticBuildings.begin(), iStaticBuilding));
+  }
 }
 
 

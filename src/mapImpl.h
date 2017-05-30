@@ -79,8 +79,7 @@ public:
 	Mineral *					GetMineral(BWAPI::Unit u) const override;
 	Geyser *					GetGeyser(BWAPI::Unit u) const override;
 
-	void						OnMineralDestroyed(BWAPI::Unit u) override;
-	void						OnStaticBuildingDestroyed(BWAPI::Unit u) override;
+  void						OnDestroy(BWAPI::Unit u) override;
 
 	const vector<Area> &		Areas() const override									{ return GetGraph().Areas(); }
 

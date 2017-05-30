@@ -248,8 +248,8 @@ void Area::PostCollectInformation()
 
 
 // Calculates the score >= 0 corresponding to the placement of a Base Command Center at 'location'.
-// The more there are ressources nearby, the higher the score is.
-// The function assumes the distance to the nearby ressources has already been computed (in InternalData()) for each tile around.
+// The more there are resources nearby, the higher the score is.
+// The function assumes the distance to the nearby resources has already been computed (in InternalData()) for each tile around.
 // The job is therefore made easier : just need to sum the InternalData() values.
 // Returns -1 if the location is impossible.
 
@@ -265,7 +265,7 @@ int Area::ComputeBaseLocationScore(TilePosition location) const
 		const Tile & tile = pMap->GetTile(location + TilePosition(dx, dy), check_t::no_check);
 		if (!tile.Buildable()) return -1;
 		if (tile.InternalData() == -1) return -1;		// The special value InternalData() == -1 means there is some ressource at maximum 3 tiles, which Starcraft rules forbid.
-												// Unfortunately, this is guaranteed only for the ressources in this Area, which is the very reason of ValidateBaseLocation
+												// Unfortunately, this is guaranteed only for the resources in this Area, which is the very reason of ValidateBaseLocation
 		if (tile.AreaId() != Id()) return -1;
 		if (tile.GetNeutral() && tile.GetNeutral()->IsStaticBuilding()) return -1;
 
@@ -314,58 +314,58 @@ bool Area::ValidateBaseLocation(TilePosition location, vector<Mineral *> & Block
 
 
 // Fills in m_Bases with good locations in this Area.
-// The algorithm repeatedly searches the best possible location L (near ressources)
-// When it finds one, the nearby ressources are assigned to L, which makes the remaining ressources decrease.
-// This causes the algorithm to always terminate due to the lack of remaining ressources.
-// To efficiently compute the distances to the ressources, with use Potiential Fields in the InternalData() value of the Tiles.
+// The algorithm repeatedly searches the best possible location L (near resources)
+// When it finds one, the nearby resources are assigned to L, which makes the remaining resources decrease.
+// This causes the algorithm to always terminate due to the lack of remaining resources.
+// To efficiently compute the distances to the resources, with use Potiential Fields in the InternalData() value of the Tiles.
 void Area::CreateBases()
 {
 	const TilePosition dimCC = UnitType(Terran_Command_Center).tileSize();
 	const Map * pMap = GetMap();
 
 
-	// Initialize the RemainingRessources with all the Minerals and Geysers in this Area satisfying some conditions:
-	vector<Ressource *> RemainingRessources;
-	for (Mineral * m : Minerals())	if ((m->InitialAmount() >= 40) && !m->Blocking()) RemainingRessources.push_back(m);
-	for (Geyser * g : Geysers())	if ((g->InitialAmount() >= 300) && !g->Blocking()) RemainingRessources.push_back(g);
+	// Initialize the RemainingResources with all the Minerals and Geysers in this Area satisfying some conditions:
+	vector<Resource *> RemainingResources;
+	for (Mineral * m : Minerals())	if ((m->InitialAmount() >= 40) && !m->Blocking()) RemainingResources.push_back(m);
+	for (Geyser * g : Geysers())	if ((g->InitialAmount() >= 300) && !g->Blocking()) RemainingResources.push_back(g);
 
-	m_Bases.reserve(min(100, (int)RemainingRessources.size()));
+	m_Bases.reserve(min(100, (int)RemainingResources.size()));
 
-	while (!RemainingRessources.empty())
+	while (!RemainingResources.empty())
 	{
-		// 1) Calculate the SearchBoundingBox (needless to search too far from the RemainingRessources):
+		// 1) Calculate the SearchBoundingBox (needless to search too far from the RemainingResources):
 
-		TilePosition topLeftRessources     = {numeric_limits<int>::max(), numeric_limits<int>::max()};
-		TilePosition bottomRightRessources = {numeric_limits<int>::min(), numeric_limits<int>::min()};
-		for (const Ressource * r : RemainingRessources)
+		TilePosition topLeftResources     = {numeric_limits<int>::max(), numeric_limits<int>::max()};
+		TilePosition bottomRightResources = {numeric_limits<int>::min(), numeric_limits<int>::min()};
+		for (const Resource * r : RemainingResources)
 		{
-			makeBoundingBoxIncludePoint(topLeftRessources, bottomRightRessources, r->TopLeft());
-			makeBoundingBoxIncludePoint(topLeftRessources, bottomRightRessources, r->BottomRight());
+			makeBoundingBoxIncludePoint(topLeftResources, bottomRightResources, r->TopLeft());
+			makeBoundingBoxIncludePoint(topLeftResources, bottomRightResources, r->BottomRight());
 		}
 
-		TilePosition topLeftSearchBoundingBox = topLeftRessources - dimCC - max_tiles_between_CommandCenter_and_ressources;
-		TilePosition bottomRightSearchBoundingBox = bottomRightRessources + 1 + max_tiles_between_CommandCenter_and_ressources;
+		TilePosition topLeftSearchBoundingBox = topLeftResources - dimCC - max_tiles_between_CommandCenter_and_resources;
+		TilePosition bottomRightSearchBoundingBox = bottomRightResources + 1 + max_tiles_between_CommandCenter_and_resources;
 		makePointFitToBoundingBox(topLeftSearchBoundingBox, TopLeft(), BottomRight() - dimCC + 1);
 		makePointFitToBoundingBox(bottomRightSearchBoundingBox, TopLeft(), BottomRight() - dimCC + 1);
 
-		// 2) Mark the Tiles with their distances from each remaining Ressource (Potential Fields >= 0)
-		for (const Ressource * r : RemainingRessources)
-			for (int dy = -dimCC.y-max_tiles_between_CommandCenter_and_ressources ; dy < r->Size().y + dimCC.y+max_tiles_between_CommandCenter_and_ressources ; ++dy)
-			for (int dx = -dimCC.x-max_tiles_between_CommandCenter_and_ressources ; dx < r->Size().x + dimCC.x+max_tiles_between_CommandCenter_and_ressources ; ++dx)
+		// 2) Mark the Tiles with their distances from each remaining Resource (Potential Fields >= 0)
+		for (const Resource * r : RemainingResources)
+			for (int dy = -dimCC.y-max_tiles_between_CommandCenter_and_resources ; dy < r->Size().y + dimCC.y+max_tiles_between_CommandCenter_and_resources ; ++dy)
+			for (int dx = -dimCC.x-max_tiles_between_CommandCenter_and_resources ; dx < r->Size().x + dimCC.x+max_tiles_between_CommandCenter_and_resources ; ++dx)
 			{
 				TilePosition t = r->TopLeft() + TilePosition(dx, dy);
 				if (pMap->Valid(t))
 				{
 					const Tile & tile = pMap->GetTile(t, check_t::no_check);
 					int dist = (distToRectangle(center(t), r->TopLeft(), r->Size())+16)/32;
-					int score = max(max_tiles_between_CommandCenter_and_ressources + 3 - dist, 0);
+					int score = max(max_tiles_between_CommandCenter_and_resources + 3 - dist, 0);
 					if (r->IsGeyser()) score *= 3;		// somewhat compensates for Geyser alone vs the several Minerals
 					if (tile.AreaId() == Id()) tile.SetInternalData(tile.InternalData() + score);	// note the additive effect (assume tile.InternalData() is 0 at the begining)
 				}
 			}
 
-		// 3) Invalidate the 7 x 7 Tiles around each remaining Ressource (Starcraft rule)
-		for (const Ressource * r : RemainingRessources)
+		// 3) Invalidate the 7 x 7 Tiles around each remaining Resource (Starcraft rule)
+		for (const Resource * r : RemainingResources)
 			for (int dy = -3 ; dy < r->Size().y + 3 ; ++dy)
 			for (int dx = -3 ; dx < r->Size().x + 3 ; ++dx)
 			{
@@ -393,9 +393,9 @@ void Area::CreateBases()
 		}
 
 		// 5) Clear Tile::m_internalData (required due to our use of Potential Fields: see comments in 2))
-		for (const Ressource * r : RemainingRessources)
-			for (int dy = -dimCC.y-max_tiles_between_CommandCenter_and_ressources ; dy < r->Size().y + dimCC.y+max_tiles_between_CommandCenter_and_ressources ; ++dy)
-			for (int dx = -dimCC.x-max_tiles_between_CommandCenter_and_ressources ; dx < r->Size().x + dimCC.x+max_tiles_between_CommandCenter_and_ressources ; ++dx)
+		for (const Resource * r : RemainingResources)
+			for (int dy = -dimCC.y-max_tiles_between_CommandCenter_and_resources ; dy < r->Size().y + dimCC.y+max_tiles_between_CommandCenter_and_resources ; ++dy)
+			for (int dx = -dimCC.x-max_tiles_between_CommandCenter_and_resources ; dx < r->Size().x + dimCC.x+max_tiles_between_CommandCenter_and_resources ; ++dx)
 			{
 				TilePosition t = r->TopLeft() + TilePosition(dx, dy);
 				if (pMap->Valid(t)) pMap->GetTile(t, check_t::no_check).SetInternalData(0);
@@ -403,20 +403,20 @@ void Area::CreateBases()
 
 		if (!bestScore) break;
 
-		// 6) Create a new Base at bestLocation, assign to it the relevant ressources and remove them from RemainingRessources:
-		vector<Ressource *> AssignedRessources;
-		for (Ressource * r : RemainingRessources)
-			if (distToRectangle(r->Pos(), bestLocation, dimCC) + 2 <= max_tiles_between_CommandCenter_and_ressources*32)
-				AssignedRessources.push_back(r);
-		really_remove_if(RemainingRessources, [&AssignedRessources](const Ressource * r){ return contains(AssignedRessources, r); });
+		// 6) Create a new Base at bestLocation, assign to it the relevant resources and remove them from RemainingResources:
+		vector<Resource *> AssignedResources;
+		for (Resource * r : RemainingResources)
+			if (distToRectangle(r->Pos(), bestLocation, dimCC) + 2 <= max_tiles_between_CommandCenter_and_resources*32)
+				AssignedResources.push_back(r);
+		really_remove_if(RemainingResources, [&AssignedResources](const Resource * r){ return contains(AssignedResources, r); });
 		
-		if (AssignedRessources.empty())
+		if (AssignedResources.empty())
 		{
 			//bwem_assert(false);
 			break;
 		}
 
-		m_Bases.emplace_back(this, bestLocation, AssignedRessources, BlockingMinerals);
+		m_Bases.emplace_back(this, bestLocation, AssignedResources, BlockingMinerals);
 	}
 }
 

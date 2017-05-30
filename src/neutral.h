@@ -20,7 +20,7 @@
 
 namespace BWEM {
 
-class Ressource;
+class Resource;
 class Mineral;
 class Geyser;
 class Area;
@@ -34,7 +34,7 @@ class Map;
 //////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Neutral is the abstract base class for a small hierarchy of wrappers around some BWAPI::Units
-// The units concerned are the Ressources (Minerals and Geysers) and the static Buildings.
+// The units concerned are the Resources (Minerals and Geysers) and the static Buildings.
 // Stacked Neutrals are supported, provided they share the same type at the same location.
 //
 
@@ -42,10 +42,10 @@ class Neutral : public utils::UserData
 {
 public:
 
-	// If this Neutral is a Ressource, returns a typed pointer to this Ressource.
+	// If this Neutral is a Resource, returns a typed pointer to this Resource.
 	// Otherwise, returns nullptr.
-	virtual Ressource *				IsRessource()				{ return nullptr; }
-	virtual const Ressource *		IsRessource() const			{ return nullptr; }
+	virtual Resource *				IsResource()				{ return nullptr; }
+	virtual const Resource *		IsResource() const			{ return nullptr; }
 
 	// If this Neutral is a Mineral, returns a typed pointer to this Mineral.
 	// Otherwise, returns nullptr.
@@ -129,24 +129,24 @@ private:
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                          //
-//                                  class Ressource
+//                                  class Resource
 //                                                                                          //
 //////////////////////////////////////////////////////////////////////////////////////////////
 //
-// A Ressource is either a Mineral or a Geyser
+// A Resource is either a Mineral or a Geyser
 
-class Ressource : public Neutral
+class Resource : public Neutral
 {
 public:
-							Ressource(BWAPI::Unit u, Map * pMap);
+							Resource(BWAPI::Unit u, Map * pMap);
 
-	Ressource *				IsRessource() override		{ return this; }
-	const Ressource *		IsRessource() const override{ return this; }
+	Resource *				IsResource() override		{ return this; }
+	const Resource *		IsResource() const override{ return this; }
 
-	// Returns the initial amount of ressources for this Ressource (same as Unit()->getInitialResources).
+	// Returns the initial amount of Resources for this Resource (same as Unit()->getInitialResources).
 	int						InitialAmount() const		{ return m_initialAmount; }
 
-	// Returns the current amount of ressources for this Ressource (same as Unit()->getResources).
+	// Returns the current amount of Resources for this Resource (same as Unit()->getResources).
 	int						Amount() const				{ return Unit()->getResources(); }
 
 private:
@@ -163,7 +163,7 @@ private:
 //
 // Minerals Correspond to the units in BWAPI::getStaticNeutralUnits() for which getType().isMineralField(),
 
-class Mineral : public Ressource
+class Mineral : public Resource
 {
 public:
 							Mineral(BWAPI::Unit u, Map * pMap);
@@ -185,7 +185,7 @@ private:
 //
 // Geysers Correspond to the units in BWAPI::getStaticNeutralUnits() for which getType() == Resource_Vespene_Geyser
 
-class Geyser : public Ressource
+class Geyser : public Resource
 {
 public:
 							Geyser(BWAPI::Unit u, Map * pMap);

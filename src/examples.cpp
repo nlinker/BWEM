@@ -105,10 +105,10 @@ void drawMap(const Map & theMap)
 
 			if (MapDrawer::showAssignedRessources)
 			{
-				vector<Ressource *> AssignedRessources(base.Minerals().begin(), base.Minerals().end());
-				AssignedRessources.insert(AssignedRessources.end(), base.Geysers().begin(), base.Geysers().end());
+				vector<Resource *> AssignedResources(base.Minerals().begin(), base.Minerals().end());
+				AssignedResources.insert(AssignedResources.end(), base.Geysers().begin(), base.Geysers().end());
 
-				for (const Ressource * r : AssignedRessources)
+				for (const Resource * r : AssignedResources)
 					bw->drawLineMap(base.Center(), r->Pos(), MapDrawer::Color::assignedRessources);
 			}
 		}

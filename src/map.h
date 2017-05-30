@@ -157,11 +157,8 @@ public:
 	// Otherwise, returns nullptr.
 	virtual Geyser *					GetGeyser(BWAPI::Unit g) const = 0;
 
-	// Should be called for each destroyed BWAPI unit u having u->getType().isMineralField() == true
-	virtual void						OnMineralDestroyed(BWAPI::Unit u) = 0;
 
-	// Should be called for each destroyed BWAPI unit u having u->getType().isSpecialBuilding() == true
-	virtual void						OnStaticBuildingDestroyed(BWAPI::Unit u) = 0;
+  virtual void OnDestroy(BWAPI::Unit u) = 0;
 
 	// Returns a reference to the Areas.
 	virtual const std::vector<Area> &	Areas() const = 0;
