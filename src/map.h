@@ -71,12 +71,12 @@ public:
 	// When on, each time a blocking Neutral (either Mineral or StaticBuilding) is destroyed,
 	// any information relative to the paths through the Areas is updated accordingly.
 	// For this to function, the Map still needs to be informed of such destructions
-	// (by calling OnMineralDestroyed and OnStaticBuildingDestroyed).
+	// (by calling OnDestroyed).
 	virtual bool						AutomaticPathUpdate() const = 0;
 
 	// Enables the automatic path update (Cf. AutomaticPathUpdate()).
 	// One might NOT want to call this function, in order to make the accessibility between Areas remain the same throughout the game.
-	// Even in this case, one should keep calling OnMineralDestroyed and OnStaticBuildingDestroyed.
+	// Even in this case, one should keep calling OnDestroyed
 	virtual void						EnableAutomaticPathAnalysis() const = 0;
 
 	// Tries to assign one Base for each starting Location in StartingLocations().
