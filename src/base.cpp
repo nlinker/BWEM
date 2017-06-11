@@ -42,7 +42,7 @@ Base::Base(Area * pArea, const TilePosition & location, const vector<Resource *>
   m_center(Position(location) + Position(UnitType(Terran_Command_Center).tileSize()) / 2),
   m_BlockingMinerals(BlockingMinerals)
 {
-  bwem_assert(!AssignedRessources.empty());
+  bwem_assert(!AssignedResources.empty());
 
   for (Resource * r : AssignedResources)
     if (Mineral * m = r->IsMineral())	m_Minerals.push_back(m);
