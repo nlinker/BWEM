@@ -142,7 +142,6 @@ public:
 
 	typedef int								index;
 											ChokePoint(detail::Graph * pGraph, index idx, const Area * area1, const Area * area2, const std::deque<BWAPI::WalkPosition> & Geometry, Neutral * pBlockingNeutral = nullptr);
-											ChokePoint(const ChokePoint & Other);
 	void									OnBlockingNeutralDestroyed(const Neutral * pBlocking);
 	index									Index() const			{ return m_index; }
 	const ChokePoint *						PathBackTrace() const							{ return m_pPathBackTrace; }

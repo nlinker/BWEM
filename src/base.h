@@ -88,7 +88,6 @@ public:
 //	Details: The functions below are used by the BWEM's internals
 
 									Base(Area * pArea, const BWAPI::TilePosition & location, const std::vector<Resource *> & AssignedRessources, const std::vector<Mineral *> & BlockingMinerals);
-									Base(const Base & Other);
 	void							SetStartingLocation(const BWAPI::TilePosition & actualLocation);
 	void							OnMineralDestroyed(const Mineral * pMineral);
 

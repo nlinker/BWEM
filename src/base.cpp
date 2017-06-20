@@ -50,13 +50,6 @@ Base::Base(Area * pArea, const TilePosition & location, const vector<Resource *>
 }
 
 
-Base::Base(const Base & Other)
-	: m_pMap(Other.m_pMap), m_pArea(Other.m_pArea)
-{
-	bwem_assert(false);
-}
-
-
 void Base::SetStartingLocation(const TilePosition & actualLocation)
 {
 	m_starting = true;

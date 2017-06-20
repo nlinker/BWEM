@@ -137,7 +137,6 @@ public:
 //	Details: The functions below are used by the BWEM's internals
 
 									Area(detail::Graph * pGraph, id areaId, BWAPI::WalkPosition top, int miniTiles);
-									Area(const Area & Other);
 	void							AddChokePoints(Area * pArea, std::vector<ChokePoint> * pChokePoints);
 	void							AddMineral(Mineral * pMineral);
 	void							AddGeyser(Geyser * pGeyser);

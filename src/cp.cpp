@@ -64,14 +64,6 @@ ChokePoint::ChokePoint(detail::Graph * pGraph, index idx, const Area * area1, co
 		}
 }
 
-
-ChokePoint::ChokePoint(const ChokePoint & Other)
-	: m_pGraph(Other.m_pGraph), m_index(0), m_pseudo(false)
-{
-	bwem_assert(false);
-}
-
-
 Map * ChokePoint::GetMap() const
 {
 	return m_pGraph->GetMap();

@@ -49,13 +49,6 @@ Area::Area(Graph * pGraph, id areaId, WalkPosition top, int miniTiles)
 }
 
 
-Area::Area(const Area & Other)
-	: m_pGraph(Other.m_pGraph)
-{
-	bwem_assert(false);
-}
-
-
 Map * Area::GetMap() const
 {
 	return m_pGraph->GetMap();
