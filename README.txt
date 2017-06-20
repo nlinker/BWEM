@@ -1,4 +1,6 @@
-This is a fork of BWEM. See http://BWEM.sourceforge.net for original documentation.
+This is a fork of BWEM. See src/examples.cpp for how to use.
+
+See http://BWEM.sourceforge.net for original documentation.
 
 API Changes from stock BWEM
 
