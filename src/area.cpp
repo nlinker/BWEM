@@ -62,7 +62,7 @@ Map * Area::GetMap() const
 }
 
 
-const TilePosition & Area::BoundingBoxSize() const
+const TilePosition Area::BoundingBoxSize() const
 {
 	return m_bottomRight + m_topLeft - 1;
 }
